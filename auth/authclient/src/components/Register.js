@@ -16,9 +16,10 @@ class Register extends Component {
       this.setState({ unMatchPwd: "" });
     }
     const payLoad = {
-      name: this.name.value,
+      username: this.name.value,
       email: this.email.value,
-      password: this.password.value
+      password1: this.password.value,
+      password2: this.password.value
     };
     this.props.dispatch(
       registerUser(payLoad, () => {

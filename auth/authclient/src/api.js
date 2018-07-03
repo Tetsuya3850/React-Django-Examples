@@ -6,12 +6,7 @@ const SERVER_URL = "http://127.0.0.1:8000";
 const register = payload =>
   axios.post(`${SERVER_URL}/rest-auth/registration/`, payload);
 
-const login = payload =>
-  axios.post(`${SERVER_URL}/rest-auth/login/`, {
-    username: "tetsuyaaa",
-    email: "tetsuya@gmail.com",
-    password: "WhyBe3577"
-  });
+const login = payload => axios.post(`${SERVER_URL}/rest-auth/login/`, payload);
 
 const getUser = () =>
   axios.get(`${SERVER_URL}/rest-auth/user`, {

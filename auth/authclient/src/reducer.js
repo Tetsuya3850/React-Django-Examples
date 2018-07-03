@@ -46,6 +46,7 @@ export const registerUser = (payload, redirect) => async dispatch => {
       return;
     }
     let { data } = e.response;
+    console.log(data);
     dispatch(registerFail(data));
   }
 };
@@ -62,6 +63,7 @@ export const loginUser = (payload, redirect) => async dispatch => {
       return;
     }
     let { data } = e.response;
+    console.log(data);
     dispatch(loginFail(data));
   }
 };
