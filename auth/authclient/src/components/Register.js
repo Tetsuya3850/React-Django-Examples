@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { registerUser } from "../reducer";
-import SocialLoginLinks from "./SocialLoginLinks";
 
 class Register extends Component {
   state = {
@@ -118,7 +117,6 @@ class Register extends Component {
             style={{ display: "block", margin: "auto" }}
           />
         </form>
-        <SocialLoginLinks />
       </div>
     );
   }
@@ -128,6 +126,9 @@ const mapStateToProps = state => {
   return state;
 };
 
-Register = connect(mapStateToProps, null)(Register);
+Register = connect(
+  mapStateToProps,
+  null
+)(Register);
 
 export default Register;

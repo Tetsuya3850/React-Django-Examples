@@ -1,20 +1,19 @@
 import api from "./api";
-import {
-  saveToken,
-  removeToken,
-  getUserInfo,
-  parseToken,
-  formatErrors
-} from "./helper";
+import { getToken, saveToken, removeToken } from "./helper";
 
 const AUTH_USER = "AUTH_USER";
+const GET_USER = "GET_USER";
 const UNAUTH_USER = "UNAUTH_USER";
 const REGISTER_FAIL = "REGISTER_FAIL";
 const LOGIN_FAIL = "LOGIN_FAIL";
 
-const authUser = userInfo => {
+const authUser = () => {
+  return { type: AUTH_USER };
+};
+
+const getUser = userInfo => {
   return {
-    type: AUTH_USER,
+    type: GET_USER,
     userInfo
   };
 };
@@ -37,11 +36,9 @@ const loginFail = errors => {
   };
 };
 
-export const registerUser = (userInfo, redirect) => async dispatch => {
+export const registerUser = (payload, redirect) => async dispatch => {
   try {
-    let { data } = await api.register(userInfo);
-    saveToken(data.token);
-    dispatch(authUser(data.userInfo));
+    await api.register(payload);
     redirect();
   } catch (e) {
     if (!e.response) {
@@ -49,16 +46,15 @@ export const registerUser = (userInfo, redirect) => async dispatch => {
       return;
     }
     let { data } = e.response;
-    const formattedErrors = formatErrors(data);
-    dispatch(registerFail(formattedErrors));
+    dispatch(registerFail(data));
   }
 };
 
-export const loginUser = (userInfo, redirect) => async dispatch => {
+export const loginUser = (payload, redirect) => async dispatch => {
   try {
-    let { data } = await api.login(userInfo);
-    saveToken(data.token);
-    dispatch(authUser(data.userInfo));
+    let { data } = await api.login(payload);
+    saveToken(data.key);
+    dispatch(authUser());
     redirect();
   } catch (e) {
     if (!e.response) {
@@ -70,25 +66,37 @@ export const loginUser = (userInfo, redirect) => async dispatch => {
   }
 };
 
-export const socialAuthUser = (token, redirect) => async dispatch => {
-  saveToken(token);
-  dispatch(authUser(parseToken(token)));
-  redirect();
-};
-
 export const reAuthUser = redirect => async dispatch => {
-  const userInfo = getUserInfo();
-  if (userInfo && userInfo.exp >= Date.now() / 1000) {
-    dispatch(authUser(userInfo));
-  } else if (userInfo && userInfo.exp < Date.now() / 1000) {
-    redirect();
+  const token = getToken();
+  if (token !== null) {
+    dispatch(authUser());
+    try {
+      let { data } = await api.getUser();
+      dispatch(getUser(data));
+    } catch (e) {
+      console.log(e.response);
+    }
   }
 };
 
 export const logoutUser = redirect => async dispatch => {
-  removeToken();
-  dispatch(unAuthUser());
-  redirect();
+  try {
+    await api.logout();
+    removeToken();
+    dispatch(unAuthUser());
+    redirect();
+  } catch (e) {
+    console.log(e.response);
+  }
+};
+
+export const getUserInfo = () => async dispatch => {
+  try {
+    let { data } = await api.getUser();
+    dispatch(getUser(data));
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const initialState = {
@@ -102,9 +110,14 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_USER:
       return {
+        ...state,
         isAuthed: true,
         registerErrors: {},
-        loginErrors: {},
+        loginErrors: {}
+      };
+    case GET_USER:
+      return {
+        ...state,
         userInfo: action.userInfo
       };
     case UNAUTH_USER:

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { loginUser } from "../reducer";
-import SocialLoginLinks from "./SocialLoginLinks";
 
 class Login extends Component {
   handleFormSubmit = async e => {
@@ -32,14 +31,7 @@ class Login extends Component {
     return (
       <div>
         <form onSubmit={this.handleFormSubmit}>
-          <a
-            style={{ textAlign: "center" }}
-            href={
-              "http://localhost:8000/o/authorize/?response_type=code&client_id=LBdDCxvkKgB4HNOf1WzDuKvnN4szL0Jo1L3PvSQR&redirect_uri=http://localhost:3000/exchange/"
-            }
-          >
-            Login
-          </a>
+          <h2 style={{ textAlign: "center" }}>Login</h2>
           <hr />
 
           <label>Email Address</label>
@@ -81,7 +73,6 @@ class Login extends Component {
             style={{ display: "block", margin: "auto" }}
           />
         </form>
-        <SocialLoginLinks />
       </div>
     );
   }

@@ -16,7 +16,7 @@ let NavBar = ({ isAuthed, dispatch, history, userInfo }) => {
           Home
         </NavLink>
         <NavLink
-          to={`/profile/${userInfo._id}`}
+          to={`/profile`}
           style={{ flexGrow: 1 }}
           activeStyle={{ color: "red" }}
         >
@@ -63,6 +63,9 @@ const mapStateToProps = state => {
   return state;
 };
 
-NavBar = connect(mapStateToProps, null)(NavBar);
+NavBar = connect(
+  mapStateToProps,
+  null
+)(NavBar);
 
 export default withRouter(NavBar);

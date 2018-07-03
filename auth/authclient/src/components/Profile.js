@@ -1,11 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import api from "../api";
+import { getUserInfo } from "../reducer";
 
 class Profile extends Component {
   state = {
     code: ""
   };
+
+  componentDidMount() {
+    this.props.dispatch(getUserInfo);
+  }
 
   handleSecret = async () => {
     try {
@@ -25,7 +30,7 @@ class Profile extends Component {
     const { userInfo } = this.props;
     return (
       <div>
-        <p>You're user name is {userInfo.name}</p>
+        <p>You're user name is {userInfo.username}</p>
         <p>You're email is {userInfo.email}</p>
         <div onClick={this.handleSecret}>
           Click here for a secret message for logged in users!
@@ -40,6 +45,9 @@ const mapStateToProps = state => {
   return state;
 };
 
-Profile = connect(mapStateToProps, null)(Profile);
+Profile = connect(
+  mapStateToProps,
+  null
+)(Profile);
 
 export default Profile;

@@ -6,10 +6,8 @@ let PrivateRoute = ({ component: Component, isAuthed, userInfo, ...rest }) => (
   <Route
     {...rest}
     render={props => {
-      if (isAuthed && userInfo._id === props.match.params.uid) {
+      if (isAuthed) {
         return <Component {...props} />;
-      } else if (isAuthed && props.match.params.uid === undefined) {
-        return <Redirect to={`${props.location.pathname}/${userInfo._id}`} />;
       } else {
         return (
           <Redirect
@@ -28,6 +26,9 @@ const mapStateToProps = state => {
   return state;
 };
 
-PrivateRoute = connect(mapStateToProps, null)(PrivateRoute);
+PrivateRoute = connect(
+  mapStateToProps,
+  null
+)(PrivateRoute);
 
 export default withRouter(PrivateRoute);
