@@ -11,8 +11,7 @@ const TODO_ACTION_FAILURE = "TODO_ACTION_FAILURE";
 export const handleFetchTodos = () => async dispatch => {
   dispatch({ type: FETCHING_TODOS });
   try {
-    let { data } = await api.fetchTodos();
-    console.log(data);
+    var { data } = await api.fetchTodos();
     dispatch({ type: FETCHING_TODOS_SUCCESS, todos: data });
   } catch (e) {
     dispatch({
@@ -24,8 +23,8 @@ export const handleFetchTodos = () => async dispatch => {
 
 export const addTodo = (payload, clearInput) => async dispatch => {
   try {
-    await api.addTodo(payload);
-    dispatch({ type: ADD_TODO, todo: payload });
+    var { data } = await api.addTodo(payload);
+    dispatch({ type: ADD_TODO, todo: data });
     clearInput();
   } catch (e) {
     dispatch({
