@@ -15,14 +15,14 @@ class Profile extends Component {
   handleSecret = async () => {
     try {
       let { data } = await api.getSecret(this.props.match.params.uid);
-      this.setState({ code: data.code });
+      this.setState({ code: data });
     } catch (e) {
       if (!e.response) {
         console.log(e);
         return;
       }
       let { data } = e.response;
-      this.setState({ code: data.code });
+      this.setState({ code: data });
     }
   };
 

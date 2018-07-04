@@ -15,9 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+
+@api_view(['GET'])
+def secret(request):
+    if not request.user.is_authenticated:
+        return Response('I hate you!')
+    return Response('I love you!')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls'))
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('secret/', secret)
 ]
